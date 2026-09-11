@@ -147,7 +147,7 @@ removeBackgroundBtn.addEventListener(
              */
 
             const response = await fetch(
-                "http://localhost:5000/process",
+                "https://superman-spoon-pang.ngrok-free.dev/process",
                 {
                     method: "POST",
                     body: formData
