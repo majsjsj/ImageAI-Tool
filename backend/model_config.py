@@ -1,0 +1,9 @@
+MODEL_NAME = "briaai/RMBG-2.0"
+
+MODEL_DEVICE = "cuda"
+
+IMAGE_SIZE = 1024
+
+OUTPUT_FORMAT = "PNG"
+
+MODEL_VERSION = "1.0"
