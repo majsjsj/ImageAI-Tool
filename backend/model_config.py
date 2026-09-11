@@ -1,6 +1,8 @@
+import torch
+
 MODEL_NAME = "briaai/RMBG-2.0"
 
-MODEL_DEVICE = "cuda"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 IMAGE_SIZE = 1024
 
