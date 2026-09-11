@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify
-from PIL import Image
+from flask import Flask, request, jsonify, send_file
+from processor import process_image
+
 import os
 import uuid
 
@@ -12,30 +13,33 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULT_FOLDER, exist_ok=True)
 
 
-@app.route("/")
+@app.get("/")
 def home():
     return jsonify({
         "status": "online",
-        "message": "ImageAI Engine is running"
+        "engine": "ImageAI",
+        "message": "AI image engine is ready"
     })
 
 
-@app.route("/process", methods=["POST"])
-def process_image():
+@app.post("/process")
+def process():
 
     if "image" not in request.files:
         return jsonify({
+            "success": False,
             "error": "No image uploaded"
         }), 400
 
-    file = request.files["image"]
+    image = request.files["image"]
 
-    if file.filename == "":
+    if not image.filename:
         return jsonify({
-            "error": "Invalid filename"
+            "success": False,
+            "error": "Invalid image"
         }), 400
 
-    file_id = str(uuid.uuid4())
+    file_id = uuid.uuid4().hex
 
     input_path = os.path.join(
         UPLOAD_FOLDER,
@@ -47,24 +51,33 @@ def process_image():
         file_id + ".png"
     )
 
-    image = Image.open(file)
-    image.save(input_path)
+    try:
 
-    # هنا سنضع نموذج إزالة الخلفية لاحقًا
-    # model.process(input_path, output_path)
+        image.save(input_path)
 
-    # مؤقتًا نحفظ الصورة كما هي
-    image.save(output_path)
+        process_image(
+            input_path,
+            output_path
+        )
 
-    return jsonify({
-        "success": True,
-        "file": output_path
-    })
+        return send_file(
+            output_path,
+            mimetype="image/png",
+            as_attachment=False
+        )
+
+    except Exception as error:
+
+        return jsonify({
+            "success": False,
+            "error": str(error)
+        }), 500
 
 
 if __name__ == "__main__":
+
     app.run(
         host="0.0.0.0",
         port=5000,
-        debug=True
+        debug=False
     )
