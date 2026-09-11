@@ -1,0 +1,278 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #0a0d12;
+    --card: #11161e;
+    --card-hover: #171d27;
+    --border: #252d38;
+    --text: #f5f7fa;
+    --muted: #8d98a8;
+    --primary: #5b8cff;
+    --primary-hover: #4779ed;
+    --success: #32d583;
+    --danger: #ff5c6c;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 50% -10%, #182744 0%, transparent 40%),
+        var(--bg);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+
+header {
+    height: 72px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+/* Main */
+
+.container {
+    width: min(1100px, 92%);
+    margin: 55px auto;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    font-size: clamp(32px, 6vw, 58px);
+    line-height: 1.05;
+    margin-bottom: 15px;
+}
+
+.hero h1 span {
+    color: var(--primary);
+}
+
+.hero p {
+    color: var(--muted);
+    font-size: 17px;
+}
+
+/* Upload */
+
+.workspace {
+    background: rgba(17, 22, 30, 0.85);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 25px;
+    backdrop-filter: blur(15px);
+}
+
+.upload-box {
+    min-height: 330px;
+    border: 2px dashed #344052;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: .25s;
+    padding: 30px;
+}
+
+.upload-box:hover,
+.upload-box.dragging {
+    border-color: var(--primary);
+    background: rgba(91, 140, 255, .06);
+}
+
+.upload-icon {
+    width: 70px;
+    height: 70px;
+    margin: auto auto 20px;
+    border-radius: 18px;
+    background: #182238;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.upload-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.upload-subtitle {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+#imageInput {
+    display: none;
+}
+
+/* Buttons */
+
+.btn {
+    border: 0;
+    border-radius: 12px;
+    padding: 13px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #1b222d;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+/* Preview */
+
+.preview-area {
+    display: none;
+    margin-top: 25px;
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.preview-card {
+    background: #0c1016;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 15px;
+}
+
+.preview-card h3 {
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: var(--muted);
+}
+
+.preview-card img {
+    width: 100%;
+    max-height: 450px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #080a0e;
+}
+
+/* Controls */
+
+.controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.controls .btn {
+    flex: 1;
+    min-width: 180px;
+}
+
+/* Loading */
+
+.loading {
+    display: none;
+    text-align: center;
+    padding: 35px;
+}
+
+.spinner {
+    width: 42px;
+    height: 42px;
+    border: 4px solid #29313e;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Footer */
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    padding: 30px;
+    font-size: 13px;
+}
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 0 4%;
+    }
+
+    .container {
+        margin: 35px auto;
+    }
+
+    .workspace {
+        padding: 15px;
+        border-radius: 16px;
+    }
+
+    .upload-box {
+        min-height: 270px;
+    }
+
+    .preview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .controls .btn {
+        width: 100%;
+    }
+}
