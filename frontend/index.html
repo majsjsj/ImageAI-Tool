@@ -1,17 +1,181 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="ImageAI Tool - أداة احترافية لإزالة خلفية الصور وتعديل صور المنتجات">
+
     <title>ImageAI Tool</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <h1>ImageAI Tool</h1>
+    <header>
+        <div class="logo">
+            Image<span>AI</span>
+        </div>
 
-    <input type="file" id="imageInput" accept="image/*">
+        <button class="btn btn-secondary">
+            الأداة
+        </button>
+    </header>
 
-    <div id="preview"></div>
+    <main class="container">
+
+        <section class="hero">
+
+            <h1>
+                حوّل صورك إلى
+                <span>صور احترافية</span>
+            </h1>
+
+            <p>
+                ارفع صورتك، وسنساعدك على إزالة الخلفية وتجهيزها للتعديل.
+            </p>
+
+        </section>
+
+
+        <section class="workspace">
+
+            <!-- Upload -->
+
+            <label class="upload-box" for="imageInput">
+
+                <div>
+
+                    <div class="upload-icon">
+                        ↑
+                    </div>
+
+                    <div class="upload-title">
+                        اسحب الصورة هنا
+                    </div>
+
+                    <div class="upload-subtitle">
+                        أو اضغط لاختيار صورة من جهازك
+                    </div>
+
+                    <br>
+
+                    <span class="btn btn-primary">
+                        اختيار صورة
+                    </span>
+
+                </div>
+
+            </label>
+
+            <input
+                type="file"
+                id="imageInput"
+                accept="image/png,image/jpeg,image/webp"
+            >
+
+
+            <!-- Loading -->
+
+            <div class="loading" id="loading">
+
+                <div class="spinner"></div>
+
+                <strong>
+                    جاري معالجة الصورة...
+                </strong>
+
+                <p>
+                    قد يستغرق الأمر بضع ثوانٍ
+                </p>
+
+            </div>
+
+
+            <!-- Preview -->
+
+            <div class="preview-area">
+
+                <div class="preview-grid">
+
+                    <!-- Original -->
+
+                    <div class="preview-card">
+
+                        <h3>
+                            الصورة الأصلية
+                        </h3>
+
+                        <img
+                            id="originalImage"
+                            alt="الصورة الأصلية"
+                        >
+
+                    </div>
+
+
+                    <!-- Result -->
+
+                    <div class="preview-card">
+
+                        <h3>
+                            النتيجة
+                        </h3>
+
+                        <img
+                            id="resultImage"
+                            alt="نتيجة المعالجة"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Controls -->
+
+                <div class="controls">
+
+                    <button
+                        class="btn btn-primary"
+                        id="removeBackgroundBtn"
+                    >
+                        إزالة الخلفية
+                    </button>
+
+                    <button
+                        class="btn btn-secondary"
+                        id="backgroundBtn"
+                    >
+                        إضافة خلفية
+                    </button>
+
+                    <button
+                        class="btn btn-secondary"
+                        id="downloadBtn"
+                    >
+                        تحميل النتيجة
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        ImageAI Tool © 2026
+    </footer>
+
+
+    <script src="app.js"></script>
 
 </body>
+
 </html>
