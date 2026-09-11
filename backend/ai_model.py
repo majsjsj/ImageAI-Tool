@@ -1,35 +1,34 @@
-from abc import ABC, abstractmethod
+import torch
+from PIL import Image
+from transformers import AutoModelForImageSegmentation
+
+MODEL_NAME = "briaai/RMBG-2.0"
 
 
-class BackgroundRemovalModel(ABC):
-
-    @abstractmethod
-    def load(self):
-        pass
-
-    @abstractmethod
-    def remove_background(self, image_path, output_path):
-        pass
-
-
-class LocalModel(BackgroundRemovalModel):
+class RMBGModel:
 
     def __init__(self):
-        self.loaded = False
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.model = None
 
     def load(self):
-        print("Loading background removal model...")
-        self.loaded = True
-        print("Model loaded successfully.")
+        if self.model is not None:
+            return
 
-    def remove_background(self, image_path, output_path):
+        print(f"Loading {MODEL_NAME} on {self.device}...")
 
-        if not self.loaded:
-            self.load()
-
-        # سيتم وضع النموذج الحقيقي هنا
-        # بدون تغيير باقي المشروع
-
-        raise NotImplementedError(
-            "AI model has not been connected yet."
+        self.model = AutoModelForImageSegmentation.from_pretrained(
+            MODEL_NAME,
+            trust_remote_code=True
         )
+
+        self.model = self.model.to(self.device)
+        self.model.eval()
+
+        print("RMBG model loaded successfully.")
+
+    def is_ready(self):
+        return self.model is not None
+
+
+ai_model = RMBGModel()
