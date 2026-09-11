@@ -12,48 +12,42 @@ def process_image(input_path, output_path):
     # فتح الصورة
     image = Image.open(input_path).convert("RGB")
 
-    # تجهيز الصورة للنموذج
+    # تجهيز الصورة بالشكل المطلوب للموديل
     transform = transforms.Compose([
         transforms.Resize((1024, 1024)),
         transforms.ToTensor(),
         transforms.Normalize(
-            [0.485, 0.456, 0.406],
-            [0.229, 0.224, 0.225]
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
         )
     ])
 
     input_tensor = transform(image).unsqueeze(0)
 
-    device = ai_model.device
-    input_tensor = input_tensor.to(device)
+    # نقل البيانات للجهاز المناسب
+    input_tensor = input_tensor.to(ai_model.device)
 
-    # تشغيل النموذج
+    # تشغيل الذكاء الاصطناعي
     with torch.no_grad():
 
-        prediction = ai_model.model(input_tensor)
+        prediction = ai_model.model(input_tensor)[-1].sigmoid().cpu()
 
     # استخراج الـ mask
-    mask = prediction[0][0]
-
-    mask = torch.sigmoid(mask)
-
-    mask = mask.cpu().squeeze().numpy()
+    mask = prediction[0].squeeze()
 
     # تحويل الـ mask إلى صورة
-    mask_image = Image.fromarray(
-        (mask * 255).astype("uint8")
-    )
+    mask_image = transforms.ToPILImage()(mask)
 
-    # إرجاع حجم الصورة الأصلي
+    # إرجاع الـ mask لحجم الصورة الأصلي
     mask_image = mask_image.resize(image.size)
 
     # تحويل الصورة إلى RGBA
     result = image.convert("RGBA")
 
-    # استخدام الـ mask كـ Alpha
+    # استخدام الـ mask كشفافية
     result.putalpha(mask_image)
 
-    # حفظ PNG بخلفية شفافة
+    # حفظ النتيجة
     result.save(
         output_path,
         "PNG"
