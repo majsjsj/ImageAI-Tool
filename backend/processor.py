@@ -1,37 +1,62 @@
 from PIL import Image
-import os
+from ai_model import ai_model
+from torchvision import transforms
+import torch
 
 
-class ImageProcessor:
+def process_image(input_path, output_path):
 
-    def __init__(self):
-        self.model = None
+    # تحميل النموذج
+    ai_model.load()
 
-    def load_model(self):
-        """
-        هنا سنحمّل نموذج إزالة الخلفية.
-        """
-        print("Loading AI model...")
+    # فتح الصورة
+    image = Image.open(input_path).convert("RGB")
 
-        # سيتم تركيب RMBG-2.0 هنا لاحقًا
+    # تجهيز الصورة للنموذج
+    transform = transforms.Compose([
+        transforms.Resize((1024, 1024)),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            [0.485, 0.456, 0.406],
+            [0.229, 0.224, 0.225]
+        )
+    ])
 
-        self.model = True
+    input_tensor = transform(image).unsqueeze(0)
 
-        print("AI model loaded.")
+    device = ai_model.device
+    input_tensor = input_tensor.to(device)
 
-    def remove_background(self, input_path, output_path):
+    # تشغيل النموذج
+    with torch.no_grad():
 
-        if self.model is None:
-            self.load_model()
+        prediction = ai_model.model(input_tensor)
 
-        image = Image.open(input_path).convert("RGBA")
+    # استخراج الـ mask
+    mask = prediction[0][0]
 
-        # مؤقتًا: نحفظ الصورة كما هي
-        # سيتم استبدال هذا الجزء بخوارزمية RMBG
+    mask = torch.sigmoid(mask)
 
-        image.save(output_path, "PNG")
+    mask = mask.cpu().squeeze().numpy()
 
-        return output_path
+    # تحويل الـ mask إلى صورة
+    mask_image = Image.fromarray(
+        (mask * 255).astype("uint8")
+    )
 
+    # إرجاع حجم الصورة الأصلي
+    mask_image = mask_image.resize(image.size)
 
-processor = ImageProcessor()
+    # تحويل الصورة إلى RGBA
+    result = image.convert("RGBA")
+
+    # استخدام الـ mask كـ Alpha
+    result.putalpha(mask_image)
+
+    # حفظ PNG بخلفية شفافة
+    result.save(
+        output_path,
+        "PNG"
+    )
+
+    return output_path
